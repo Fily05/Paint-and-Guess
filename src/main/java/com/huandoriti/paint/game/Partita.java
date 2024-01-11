@@ -1,6 +1,8 @@
 package com.huandoriti.paint.game;
 
+import java.awt.*;
 import java.io.IOException;
+import java.io.ObjectOutput;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,6 +25,20 @@ public class Partita implements Runnable{
     @Override
     public void run() {
         iniziaPartita();
+        while (true) {
+            try {
+                Object obj = giocatori.get(0).getInputStream().readObject();
+                if (obj instanceof Canvas canvas) {
+                    for (int i = 1; i < giocatori.size(); i++) {
+                        //TODO: continua la selezione ddei giocatori
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public void iniziaPartita(){
@@ -46,7 +62,7 @@ public class Partita implements Runnable{
             giocatore.setId(i);
             try {
                 giocatore.getOutputStream().writeObject(Ruolo.INDOVINATORE);
-                giocatore.getOutputStream().writeObject(i);
+                giocatore.getOutputStream().writeObject("" + i);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,6 +1,9 @@
 package com.huandoriti.paint;
 
 import com.huandoriti.paint.game.Giocatore;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -8,8 +11,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
+import java.awt.image.TileObserver;
 import java.io.File;
 import java.io.IOException;
 
@@ -53,8 +58,21 @@ public class PainterController {
                 g.fillRect(x, y, size, size);
             }
         });
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> sendCanvas()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
+    public void sendCanvas() {
+        if (giocatore != null && giocatore.isDisegnatore()) {
+            try {
+                giocatore.getOutputStream().writeObject(canvas);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * NOn inserire nel initialize siccome initialize viene eseguitio prima quando
      * giocatore non viene ancora caricato o  esegui
