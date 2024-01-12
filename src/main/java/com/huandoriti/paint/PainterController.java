@@ -69,11 +69,11 @@ public class PainterController {
             }
         });
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2000), e -> sendCanvas()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), e -> sendCanvas()));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(2000), e -> receiveCanvas()));
+        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(50), e -> receiveCanvas()));
         timeline2.setCycleCount(Animation.INDEFINITE);
         timeline2.play();
     }
@@ -101,11 +101,13 @@ public class PainterController {
     public void sendCanvas() {
         if (giocatore != null && giocatore.isDisegnatore()) {
             try {
-                System.out.println("Send canvas");
-                System.out.println(forme.toString());
-                giocatore.getOutputStream().writeObject(forme);
-                giocatore.getOutputStream().flush();
-                forme = new ArrayList<>();
+                if (forme.size() > 0) {
+                    System.out.println("Send canvas");
+                    System.out.println(forme.toString());
+                    giocatore.getOutputStream().writeObject(forme);
+                    giocatore.getOutputStream().flush();
+                    forme = new ArrayList<>();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -146,6 +148,7 @@ public class PainterController {
         Platform.exit();
     }
     public void onClear() {
+        //TODO: trasmettere cliear
         if (giocatore != null && giocatore.isDisegnatore())
             canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
