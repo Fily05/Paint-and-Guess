@@ -3,6 +3,7 @@ package com.huandoriti.paint.game;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,11 +28,11 @@ public class Partita implements Runnable{
         iniziaPartita();
         while (true) {
             try {
-                Object obj = giocatori.get(0).getInputStream().readObject();
-                if (obj instanceof Canvas canvas) {
-                    for (int i = 1; i < giocatori.size(); i++) {
-                        //TODO: continua la selezione ddei giocatori
-                    }
+                ArrayList<Forma> obj = (ArrayList<Forma>) giocatori.get(0).getInputStream().readObject();
+                System.out.println(obj);
+                for (int i = 1; i < giocatori.size(); i++) {
+                    giocatori.get(i).getOutputStream().writeObject(obj);
+                    giocatori.get(i).getOutputStream().flush();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -52,7 +53,8 @@ public class Partita implements Runnable{
             giocatori.get(0).getOutputStream().writeObject(giocatori.get(0).getParolaDaDisegnare());
             giocatori.get(0).getOutputStream().writeObject("0");
             giocatori.get(0).setId(0);
-            new Thread(giocatori.get(0)).start();
+            threads.add(new Thread(giocatori.get(0)));
+            threads.get(0).start();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,6 @@
 package com.huandoriti.paint;
 
-import com.huandoriti.paint.game.Giocatore;
+import com.huandoriti.paint.game.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -11,12 +11,18 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import javax.crypto.spec.DESedeKeySpec;
 import javax.imageio.ImageIO;
 import java.awt.image.TileObserver;
+import java.beans.beancontext.BeanContextServiceAvailableEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class PainterController {
     private Giocatore giocatore;
@@ -40,7 +46,8 @@ public class PainterController {
     private Button clear;
     @FXML
     private Label nomeGiocatore;
-
+    @FXML
+    private ArrayList<Forma> forme = new ArrayList<>();
     public void initialize() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         canvas.setOnMouseDragged(e -> {
@@ -53,22 +60,55 @@ public class PainterController {
 
             if (eraser.isSelected()) {
                 g.clearRect(x, y, size, size);
+                forme.add(new Rect(x,y,size,size));
             } else {
-                g.setFill(colorPicker.getValue());
-                g.fillRect(x, y, size, size);
+                Color color = (Color) colorPicker.getValue();
+                g.setFill(color);
+                g.fillOval(x, y, size, size);
+                forme.add(new Oval(x,y,size,size, color.toString()));
             }
         });
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> sendCanvas()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2000), e -> sendCanvas()));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+
+        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(2000), e -> receiveCanvas()));
+        timeline2.setCycleCount(Animation.INDEFINITE);
+        timeline2.play();
+    }
+
+    public void receiveCanvas() {
+        if (giocatore != null && !giocatore.isDisegnatore()) {
+            try {
+                System.out.println("Receive canvas");
+                ArrayList<Forma> o = (ArrayList<Forma>) giocatore.getInputStream().readObject();
+                System.out.println(o.toString());
+                for (Forma forma : o) {
+                    if (forma instanceof Rect rect) {
+                        canvas.getGraphicsContext2D().clearRect(rect.x, rect.y, rect.width, rect.height);
+                    } else if (forma instanceof Oval oval) {
+                        canvas.getGraphicsContext2D().setFill(Color.valueOf(oval.color));
+                        canvas.getGraphicsContext2D().fillOval(oval.x, oval.y, oval.width, oval.height);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void sendCanvas() {
         if (giocatore != null && giocatore.isDisegnatore()) {
             try {
-                giocatore.getOutputStream().writeObject(canvas);
+                System.out.println("Send canvas");
+                System.out.println(forme.toString());
+                giocatore.getOutputStream().writeObject(forme);
+                giocatore.getOutputStream().flush();
+                forme = new ArrayList<>();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
