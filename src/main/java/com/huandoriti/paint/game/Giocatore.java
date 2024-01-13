@@ -9,8 +9,8 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class Giocatore implements Runnable{
+
     private int id;
-    private Partita partita;
     private boolean isDisegnatore;
     private String parolaDaDisegnare;
 
@@ -39,6 +39,21 @@ public class Giocatore implements Runnable{
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Giocatore giocatore = (Giocatore) o;
+
+        return id == giocatore.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
     public int getId() {
         return id;
     }
@@ -47,13 +62,7 @@ public class Giocatore implements Runnable{
         this.id = id;
     }
 
-    public Partita getPartita() {
-        return partita;
-    }
 
-    public void setPartita(Partita partita) {
-        this.partita = partita;
-    }
 
     public boolean isDisegnatore() {
         return isDisegnatore;
@@ -91,7 +100,10 @@ public class Giocatore implements Runnable{
         this.outputStream = outputStream;
     }
 
+
+
     public void setParolaDaDisegnare(String parolaDaDisegnare) {
+
         this.parolaDaDisegnare = parolaDaDisegnare;
     }
 }

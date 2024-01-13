@@ -25,7 +25,8 @@ public class Server {
                     Socket socket = serverSocket.accept();
                     System.out.println("Server accetta");
                     System.out.println(socket);
-                    partita.aggGiocatore(new Giocatore(socket));
+                    partita.aggGiocatore(new GiocatoreServer(socket));
+                    partita.getGiocatori().get(count).setPartita(partita);
                     count++;
                 }
                 System.out.println("partita run");
