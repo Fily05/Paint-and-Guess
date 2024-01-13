@@ -21,7 +21,7 @@ public class Server {
             int count = 0;
             Partita partita = new Partita();
             try {
-                while (count < 2) {
+                while (count < 3) {
                     Socket socket = serverSocket.accept();
                     System.out.println("Server accetta");
                     System.out.println(socket);

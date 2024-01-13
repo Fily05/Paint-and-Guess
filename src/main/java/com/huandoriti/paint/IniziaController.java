@@ -42,14 +42,16 @@ public class IniziaController {
                     giocatore = new Giocatore(new Socket("localhost", 5544));
                     isConnected = true;
                     Platform.runLater(() -> message.setText("In attesa degli altri giocatori... "));
-                    if (giocatore.getInputStream().readObject() instanceof Ruolo ruolo) {
-                        if (ruolo.ordinal() == Ruolo.DISEGNATORE.ordinal()) {
-                            System.out.println("Sono disegnatore");
-                            giocatore.setDisegnatore(true);
-                            String parolaDisegnare = (String) giocatore.getInputStream().readObject();
-                            giocatore.setParolaDaDisegnare(parolaDisegnare);
-                        } else {
+                    synchronized (giocatore.getInputStream()) {
+                        if (giocatore.getInputStream().readObject() instanceof Ruolo ruolo) {
+                            if (ruolo.ordinal() == Ruolo.DISEGNATORE.ordinal()) {
+                                System.out.println("Sono disegnatore");
+                                giocatore.setDisegnatore(true);
+                                String parolaDisegnare = (String) giocatore.getInputStream().readObject();
+                                giocatore.setParolaDaDisegnare(parolaDisegnare);
+                            } else {
 
+                            }
                         }
                     }
                     System.out.println("dddd");

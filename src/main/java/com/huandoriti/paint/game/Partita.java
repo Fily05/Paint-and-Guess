@@ -80,6 +80,7 @@ public class Partita implements Runnable{
         disegnatore.setDisegnatore(true);
         String parolaDaIndovinare = paroleDaIndovinare[new Random().nextInt(paroleDaIndovinare.length)];
         disegnatore.setParolaDaDisegnare(parolaDaIndovinare);
+        this.parolaDaIndovinare = disegnatore.getParolaDaDisegnare();
         try {
             System.out.println("Server invia ruoli");
             synchronized (disegnatore.getOutputStream()) {

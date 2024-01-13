@@ -89,11 +89,11 @@ public class PainterController {
         chat.setLineSpacing(0.5);
         brushSize.setEditable(true);
         brushSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 48, 12, 2));
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2000), e -> Platform.runLater(() -> sendCanvas())));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> Platform.runLater(() -> sendCanvas())));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(2000), e -> new Thread(new Task<>() {
+        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), e -> new Thread(new Task<>() {
             @Override
             protected Object call() throws Exception {
                 receiveData();
@@ -127,7 +127,9 @@ public class PainterController {
             try {
                 System.out.println("Aspetto che ricevo");
                 Object o;
-                o = giocatore.getInputStream().readObject();
+                synchronized (giocatore.getInputStream()) {
+                    o = giocatore.getInputStream().readObject();
+                }
                 System.out.println("ho ricevuto oggetto");
                 if (o instanceof ArrayList) {
                     receiveCanvas((ArrayList<Forma>) o);
