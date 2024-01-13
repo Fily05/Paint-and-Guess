@@ -48,7 +48,7 @@
             <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="512.0" style="-fx-border-color: grey; -fx-border-width: 1px; -fx-border-style: solid;" BorderPane.alignment="CENTER">
                <children>
                     <Canvas fx:id="canvas" height="380.0" width="512.0" />
-                  <Label fx:id="parolaDaDisegnare" layoutX="242.0" layoutY="14.0" text="Label" />
+                  <Label fx:id="parolaDaDisegnare" layoutX="242.0" layoutY="14.0" />
                </children>
             </Pane>
          </right>

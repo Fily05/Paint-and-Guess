@@ -17,7 +17,6 @@ public class Partita implements Runnable{
     private ArrayList<Thread> threads = new ArrayList<>();
     private String[] paroleDaIndovinare = {"cane", "gatto", "libro", "pollo"};
     private boolean started;
-
     private int turn;
 
     public Partita() {
@@ -27,17 +26,26 @@ public class Partita implements Runnable{
     public void run() {
         iniziaPartita();
         while (true) {
+            ArrayList<Forma> obj;
             try {
-                ArrayList<Forma> obj = (ArrayList<Forma>) giocatori.get(0).getInputStream().readObject();
+                obj = (ArrayList<Forma>) giocatori.get(0).getInputStream().readObject();
                 System.out.println(obj);
+            } catch (IOException e) {
+                //TODO: se disegnatore si scollega dal gioco
+                e.printStackTrace();
+                break;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                continue;
+            }
+            try {
                 for (int i = 1; i < giocatori.size(); i++) {
                     giocatori.get(i).getOutputStream().writeObject(obj);
                     giocatori.get(i).getOutputStream().flush();
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                //Se un giocatore si scollega dal gioco
+                e.printStackTrace();
             }
         }
     }
@@ -85,12 +93,7 @@ public class Partita implements Runnable{
         LockSupport.park();
     }
 
-    public void draw(Giocatore giocatore) {
-        if (turn != giocatore.getId()) {
-            return;
-        }
 
-    }
 
     public void aggGiocatore(Giocatore giocatore) {
         System.out.println("Aggiungi giocatore");

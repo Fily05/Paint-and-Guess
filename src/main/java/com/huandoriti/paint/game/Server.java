@@ -17,7 +17,7 @@ public class Server {
     }
 
     public void start() {
-//        while (true) {
+        while (true) {
             int count = 0;
             Partita partita = new Partita();
             try {
@@ -33,7 +33,7 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//        }
+        }
 
 
     }

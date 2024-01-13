@@ -3,12 +3,15 @@ package com.huandoriti.paint;
 import com.huandoriti.paint.game.Giocatore;
 import com.huandoriti.paint.game.Ruolo;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
@@ -18,22 +21,27 @@ public class IniziaController {
     private ClientPainterApplication application;
     @FXML
     private Button inizia;
+    @FXML
+    private Label message;
+    private boolean isConnected;
 
     public void onStart() {
-        try {
-            caricaGiocare();
-            application.loadGame("home.fxml", "PAINT AND GUESS", giocatore);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (isConnected) {
+            return;
         }
+
+        caricaGiocare();
     }
 
     public void caricaGiocare() {
-        CompletableFuture future = new CompletableFuture();
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
                 try {
                     System.out.println("ciaooo");
                     giocatore = new Giocatore(new Socket("localhost", 5544));
-                    System.out.println("bbbbbbb");
+                    isConnected = true;
+                    Platform.runLater(() -> message.setText("In attesa degli altri giocatori... "));
                     if (giocatore.getInputStream().readObject() instanceof Ruolo ruolo) {
                         if (ruolo.ordinal() == Ruolo.DISEGNATORE.ordinal()) {
                             System.out.println("Sono disegnatore");
@@ -45,11 +53,22 @@ public class IniziaController {
                         }
                     }
                     System.out.println("dddd");
-                }
-                 catch (IOException | ClassNotFoundException e) {
+                }catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-
+                return null;
+            }
+        };
+        task.setOnSucceeded((event) -> {
+            try {
+                //TODO: Non runna
+                System.out.println("LoadGame");
+                application.loadGame("home.fxml", "PAINT AND GUESS", giocatore);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     public Giocatore getGiocatore() {
