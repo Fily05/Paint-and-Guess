@@ -81,17 +81,17 @@ public class PainterController {
     public void receiveCanvas() {
         if (giocatore != null && !giocatore.isDisegnatore()) {
             try {
-                System.out.println("Receive canvas");
-                ArrayList<Forma> o = (ArrayList<Forma>) giocatore.getInputStream().readObject();
-                System.out.println(o.toString());
-                for (Forma forma : o) {
-                    if (forma instanceof Rect rect) {
-                        canvas.getGraphicsContext2D().clearRect(rect.x, rect.y, rect.width, rect.height);
-                    } else if (forma instanceof Oval oval) {
-                        canvas.getGraphicsContext2D().setFill(Color.valueOf(oval.color));
-                        canvas.getGraphicsContext2D().fillOval(oval.x, oval.y, oval.width, oval.height);
+                    ArrayList<Forma> o = (ArrayList<Forma>) giocatore.getInputStream().readObject();
+                    System.out.println("Receive canvas");
+                    System.out.println(o.toString());
+                    for (Forma forma : o) {
+                        if (forma instanceof Rect rect) {
+                            canvas.getGraphicsContext2D().clearRect(rect.x, rect.y, rect.width, rect.height);
+                        } else if (forma instanceof Oval oval) {
+                            canvas.getGraphicsContext2D().setFill(Color.valueOf(oval.color));
+                            canvas.getGraphicsContext2D().fillOval(oval.x, oval.y, oval.width, oval.height);
+                        }
                     }
-                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -101,13 +101,13 @@ public class PainterController {
     public void sendCanvas() {
         if (giocatore != null && giocatore.isDisegnatore()) {
             try {
-                if (forme.size() > 0) {
+
                     System.out.println("Send canvas");
                     System.out.println(forme.toString());
                     giocatore.getOutputStream().writeObject(forme);
                     giocatore.getOutputStream().flush();
                     forme = new ArrayList<>();
-                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -149,8 +149,11 @@ public class PainterController {
     }
     public void onClear() {
         //TODO: trasmettere cliear
-        if (giocatore != null && giocatore.isDisegnatore())
+        if (giocatore != null && giocatore.isDisegnatore()) {
             canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            forme.add(new Rect(0, 0, canvas.getWidth(), canvas.getHeight()));
+        }
+
     }
 
     public ClientPainterApplication getApplication() {

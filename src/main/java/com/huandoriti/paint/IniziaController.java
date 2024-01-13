@@ -2,6 +2,7 @@ package com.huandoriti.paint;
 
 import com.huandoriti.paint.game.Giocatore;
 import com.huandoriti.paint.game.Ruolo;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
 
 public class IniziaController {
     private Giocatore giocatore;
@@ -27,24 +29,27 @@ public class IniziaController {
     }
 
     public void caricaGiocare() {
-        try {
-            System.out.println("ciaooo");
-            giocatore = new Giocatore(new Socket("localhost", 5544));
-            System.out.println("bbbbbbb");
-            if (giocatore.getInputStream().readObject() instanceof Ruolo ruolo) {
-                if (ruolo.ordinal() == Ruolo.DISEGNATORE.ordinal()) {
-                    System.out.println("Sono disegnatore");
-                    giocatore.setDisegnatore(true);
-                    String parolaDisegnare = (String) giocatore.getInputStream().readObject();
-                    giocatore.setParolaDaDisegnare(parolaDisegnare);
-                } else {
+        CompletableFuture future = new CompletableFuture();
+                try {
+                    System.out.println("ciaooo");
+                    giocatore = new Giocatore(new Socket("localhost", 5544));
+                    System.out.println("bbbbbbb");
+                    if (giocatore.getInputStream().readObject() instanceof Ruolo ruolo) {
+                        if (ruolo.ordinal() == Ruolo.DISEGNATORE.ordinal()) {
+                            System.out.println("Sono disegnatore");
+                            giocatore.setDisegnatore(true);
+                            String parolaDisegnare = (String) giocatore.getInputStream().readObject();
+                            giocatore.setParolaDaDisegnare(parolaDisegnare);
+                        } else {
 
+                        }
+                    }
+                    System.out.println("dddd");
                 }
-            }
-            System.out.println("dddd");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+                 catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
     }
 
     public Giocatore getGiocatore() {
