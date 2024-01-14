@@ -7,9 +7,11 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -49,12 +51,10 @@ public class IniziaController {
                                 giocatore.setDisegnatore(true);
                                 String parolaDisegnare = (String) giocatore.getInputStream().readObject();
                                 giocatore.setParolaDaDisegnare(parolaDisegnare);
-                            } else {
-
                             }
                         }
                     }
-                    System.out.println("dddd");
+                    System.out.println("fatto");
                 }catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -63,7 +63,6 @@ public class IniziaController {
         };
         task.setOnSucceeded((event) -> {
             try {
-                //TODO: Non runna
                 System.out.println("LoadGame");
                 application.loadGame("home.fxml", "PAINT AND GUESS", giocatore);
             } catch (IOException e) {
@@ -72,7 +71,19 @@ public class IniziaController {
         });
         new Thread(task).start();
     }
+    public void onExit(WindowEvent event) {
+        event.consume();
+        if (isConnected) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Paint and Guess");
+            alert.setTitle("Impossibile chiudere il gioco");
+            alert.setContentText("La partita non è ancora iniziata, aspetta!!!");
+            alert.showAndWait();
+        } else {
+            Platform.exit();
+        }
 
+    }
     public Giocatore getGiocatore() {
         return giocatore;
     }

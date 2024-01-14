@@ -1,9 +1,11 @@
 package com.huandoriti.paint.game;
 
 import javax.sound.midi.Soundbank;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class GiocatoreServer extends Giocatore{
     private String nomeGiocatore;
@@ -16,23 +18,26 @@ public class GiocatoreServer extends Giocatore{
     public void run() {
         while (true) {
             if (isDisegnatore()) {
-                //Disegnatore non deve terminare in quanto altrimenti muore thread
+                //Disegnatore non partecipa alla chat
+                //Disegnatore non deve terminare altrimenti muore thread
                 continue;
             }
             try {
                 Object o;
-                    System.out.println("Giocatore server ha letto");
-                    o = this.getInputStream().readObject();
-                    if (o instanceof String s) {
-                        this.getPartita().getChatService().receiveText(this, s);
-                    } else {
-                        System.out.println("Da indovinatore ho ricevuto qualcosa di storto");
-                    }
+                System.out.println("Giocatore server ha letto");
+                o = this.getInputStream().readObject();
+                if (o instanceof String s) {
+                    boolean hoIndovinato = this.getPartita().getChatService().receiveText(this, s);
+                    if (hoIndovinato) return;
+                } else {
+                    System.out.println("Da indovinatore ho ricevuto qualcosa di storto");
+                }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (SocketException | EOFException exception) {
+                System.out.println("Giocatore cannot read and terminate");
+                return;
+            } catch (IOException | ClassNotFoundException exception) {
+                exception.printStackTrace();
             }
         }
 

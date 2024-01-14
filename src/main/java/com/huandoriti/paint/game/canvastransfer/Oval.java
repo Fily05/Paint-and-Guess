@@ -1,8 +1,8 @@
-package com.huandoriti.paint.game;
+package com.huandoriti.paint.game.canvastransfer;
 
-import javafx.scene.paint.Color;
+import com.huandoriti.paint.game.canvastransfer.Forma;
 
-public class Oval extends Forma{
+public class Oval extends Forma {
 
     public String color;
 

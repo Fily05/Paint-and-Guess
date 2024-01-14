@@ -10,4 +10,7 @@ module com.huandoriti.paint {
 
     opens com.huandoriti.paint.game to javafx.fxml, javafx.swing;
     exports com.huandoriti.paint.game;
+
+    exports com.huandoriti.paint.game.canvastransfer;
+    opens com.huandoriti.paint.game.canvastransfer to javafx.fxml, javafx.swing;
 }

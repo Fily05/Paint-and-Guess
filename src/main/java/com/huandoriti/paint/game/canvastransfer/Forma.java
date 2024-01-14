@@ -1,4 +1,4 @@
-package com.huandoriti.paint.game;
+package com.huandoriti.paint.game.canvastransfer;
 
 import java.io.Serializable;
 

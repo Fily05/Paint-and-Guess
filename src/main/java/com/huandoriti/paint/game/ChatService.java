@@ -14,7 +14,13 @@ public class ChatService {
         this.partita = partita;
     }
 
-    public void receiveText(GiocatoreServer indovinatore, String text) {
+    /**
+     *
+     * @param indovinatore
+     * @param text
+     * @return true se ho indovovinato
+     */
+    public boolean receiveText(GiocatoreServer indovinatore, String text) {
         boolean haIndovinato = text.equalsIgnoreCase(partita.getParolaDaIndovinare());
         if (haIndovinato) {
             partita.getVincitori().add(indovinatore);
@@ -25,10 +31,10 @@ public class ChatService {
                 try {
                     synchronized (giocatoreServer.getOutputStream()) {
                         if (haIndovinato) {
-                            giocatoreServer.getOutputStream().writeObject("*****");
+                            giocatoreServer.getOutputStream().writeObject(indovinatore.getNomeGiocatore() + ": ***** " + "(ha vinto)");
                             giocatoreServer.getOutputStream().flush();
                         } else {
-                            giocatoreServer.getOutputStream().writeObject(text);
+                            giocatoreServer.getOutputStream().writeObject(indovinatore.getNomeGiocatore() + ": " + text);
                             giocatoreServer.getOutputStream().flush();
                         }
                         System.out.println("Chat: Ho inviato ai giocatore" + i);
@@ -38,5 +44,6 @@ public class ChatService {
                 }
             }
         }
+        return haIndovinato;
     }
 }

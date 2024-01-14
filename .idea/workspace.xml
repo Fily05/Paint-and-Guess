@@ -4,23 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="318e3a5c-30be-4e49-a6ec-fb72994349fa" name="Changes" comment="Questa è la versione funzionante con la trasmissione del canvas. Non ancora integrato la chat. Con la comparsa del messaggio che in attesa degli altri giocatori. Senza mandare in &quot;non rispondi&quot; il programma.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/ChatService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/GiocatoreServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="318e3a5c-30be-4e49-a6ec-fb72994349fa" name="Changes" comment="eliminato il bug in cui la parola indovinata puo essere vista ( cioè senza asterischi)">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/PunteggioCalculatore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/ClientPainterApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/ClientPainterApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/IniziaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/IniziaController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/PainterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/PainterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Giocatore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Giocatore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/ChatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/ChatService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Forma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/canvastransfer/Forma.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/GiocatoreServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/GiocatoreServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Instruction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Instruction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Oval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/canvastransfer/Oval.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Rect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/canvastransfer/Rect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/huandoriti/paint/home.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/huandoriti/paint/home.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/IniziaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/IniziaController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/PainterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/PainterController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Giocatore.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Giocatore.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Partita.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Partita.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Server.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/home.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/home.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/inizia.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/inizia.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/message.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/message.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,18 +72,24 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.43908045&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.43908045",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
-  <component name="RunManager" selected="Application.ClientPainterApplication2">
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.huandoriti.paint.game.canvastransfer" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.ClientPainterApplication">
     <configuration name="ClientPainterApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.ClientPainterApplication" />
       <module name="Paint" />
@@ -99,12 +110,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ClientPainterApplication3" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.ClientPainterApplication" />
+      <module name="Paint" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.game.Server" />
       <module name="Paint" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.huandoriti.paint.game.*" />
+          <option name="PATTERN" value="com.huandoriti.paint.game.canvastransfer.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -127,13 +145,14 @@
     </configuration>
     <list>
       <item itemvalue="Application.ClientPainterApplication2" />
+      <item itemvalue="Application.ClientPainterApplication3" />
       <item itemvalue="Application.ClientPainterApplication" />
       <item itemvalue="Application.Server" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ClientPainterApplication" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.ClientPainterApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -202,7 +221,23 @@
       <option name="project" value="LOCAL" />
       <updated>1705156759252</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Questa è la versione funzionante con la trasmissione del canvas. Integrato la chat. Nella quale si puo inviare ma non c'è bug nella visualizzazione della parola da indovinare che deve essere sostituita da asterischi. Da gestiche ancora termine del gioco e il punteggio">
+      <option name="closed" value="true" />
+      <created>1705189080110</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1705189080110</updated>
+    </task>
+    <task id="LOCAL-00009" summary="eliminato il bug in cui la parola indovinata puo essere vista ( cioè senza asterischi)">
+      <option name="closed" value="true" />
+      <created>1705189649296</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1705189649296</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -221,19 +256,21 @@
     <MESSAGE value="Aggiunto la parte che non è stata effettuata nessun modifica nel canvas non viene inviato nulla al server" />
     <MESSAGE value="Questa è la versione funzionante con la trasmissione del canvas. Non ancora integrato la chat" />
     <MESSAGE value="Questa è la versione funzionante con la trasmissione del canvas. Non ancora integrato la chat. Con la comparsa del messaggio che in attesa degli altri giocatori. Senza mandare in &quot;non rispondi&quot; il programma." />
-    <option name="LAST_COMMIT_MESSAGE" value="Questa è la versione funzionante con la trasmissione del canvas. Non ancora integrato la chat. Con la comparsa del messaggio che in attesa degli altri giocatori. Senza mandare in &quot;non rispondi&quot; il programma." />
+    <MESSAGE value="Questa è la versione funzionante con la trasmissione del canvas. Integrato la chat. Nella quale si puo inviare ma non c'è bug nella visualizzazione della parola da indovinare che deve essere sostituita da asterischi. Da gestiche ancora termine del gioco e il punteggio" />
+    <MESSAGE value="eliminato il bug in cui la parola indovinata puo essere vista ( cioè senza asterischi)" />
+    <option name="LAST_COMMIT_MESSAGE" value="eliminato il bug in cui la parola indovinata puo essere vista ( cioè senza asterischi)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java</url>
-          <line>29</line>
+          <line>39</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java</url>
-          <line>34</line>
+          <line>45</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

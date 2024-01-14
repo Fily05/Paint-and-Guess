@@ -1,15 +1,19 @@
 package com.huandoriti.paint.game;
 
-import java.awt.*;
+import com.huandoriti.paint.game.canvastransfer.Forma;
+import javafx.application.Platform;
+import javafx.util.Duration;
+
 import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.Serializable;
-import java.lang.reflect.Array;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Random;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 
 public class Partita implements Runnable{
@@ -17,10 +21,16 @@ public class Partita implements Runnable{
     private ArrayList<GiocatoreServer> vincitori = new ArrayList<>();
     private ArrayList<Thread> threads = new ArrayList<>();
     private String[] paroleDaIndovinare = {"cane", "gatto", "libro", "pollo"};
+    private GiocatoreServer disegnatore;
     private String parolaDaIndovinare;
     private ChatService chatService;
-    private boolean started;
+    public static final Duration MAX_TEMPO = Duration.minutes(1);
+    /**
+     * Partita è terminato quando il tempo è scaduto, o tutti hanno indovinato
+     */
+    private AtomicBoolean isTerminated = new AtomicBoolean(false);
     private int turn;
+    private Duration tempoRimasto = Partita.MAX_TEMPO;
 
     public Partita() {
     }
@@ -28,12 +38,18 @@ public class Partita implements Runnable{
     @Override
     public void run() {
         iniziaPartita();
+        iniziaTimer();
         System.out.println("Inizio chat service");
         chatService = new ChatService(giocatori, this);
         while (true) {
             Object object;
             System.out.println("Sincronizzio input stream disegnatore");
             synchronized (giocatori.get(0).getInputStream()) {
+                if (isTerminatoPartita()) {
+                    System.out.println("Partita terminata");
+                    terminaPartita();
+                    return;
+                }
                 System.out.println("leggo canvas");
                 try {
                     object = giocatori.get(0).getInputStream().readObject();
@@ -42,42 +58,88 @@ public class Partita implements Runnable{
                     e.printStackTrace();
                     continue;
                 }
-            //TODO: finisci quiiii
             }
-            ArrayList<Forma> list;
-            if (object instanceof ArrayList<?>) {
-                System.out.println("converto canvas");
-                list = (ArrayList<Forma>) object;
-            } else {
-                System.out.println("Non ho ricevurto array da disegnatore");
-                continue;
-            }
-            System.out.println("invio i canvas");
-            try {
-                for (int i = 1; i < giocatori.size(); i++) {
-                    System.out.println("Invio giocatore " + i);
-                    System.out.println("Lista: " + list.toString());
-                    giocatori.get(i).getOutputStream().writeObject(list);
-                    giocatori.get(i).getOutputStream().flush();
-                    System.out.println("Ho inviato al giocatore");
+            if (object instanceof Instruction instruction) {
+                if (instruction.ordinal() == Instruction.FINISH.ordinal()) {
+                    System.out.println("Disegnatore segnala tempo finito");
+                    while (!isTerminatoPartita()) {}
+                    System.out.println("Partita terminata");
+                    terminaPartita();
+                    return;
                 }
+            }
+            sendCanvasToAll(object);
+
+        }
+    }
+    //TODO: finisci send canva, c' bug
+    private void sendCanvasToAll(Object object) {
+        ArrayList<Forma> list;
+        if (object instanceof ArrayList<?>) {
+            System.out.println("converto canvas");
+            list = (ArrayList<Forma>) object;
+        } else {
+            System.out.println("Non ho ricevurto array da disegnatore");
+            return;
+        }
+        System.out.println("invio i canvas");
+        try {
+            for (int i = 1; i < giocatori.size(); i++) {
+                System.out.println("Invio giocatore " + i);
+                System.out.println("Lista: " + list.toString());
+                giocatori.get(i).getOutputStream().writeObject(list);
+                giocatori.get(i).getOutputStream().flush();
+                System.out.println("Ho inviato al giocatore");
+            }
+        } catch (IOException e) {
+            //Se un giocatore si scollega dal gioco
+            e.printStackTrace();
+        }
+    }
+
+    public void terminaPartita() {
+        PunteggioCalculatore punteggioCalculatore = new PunteggioCalculatore(giocatori, vincitori, disegnatore);
+        LinkedHashMap<GiocatoreServer, Integer> punteggiGiocatore = punteggioCalculatore.calcolaPunteggi();
+        for (GiocatoreServer giocatoreServer : giocatori) {
+            try {
+                giocatoreServer.getOutputStream().writeObject(Instruction.FINISH);
+                System.out.println("invio punteggio");
+                punteggiGiocatore.forEach((g, punteggio) -> {
+                    synchronized (g.getOutputStream()) {
+                        try {
+                            giocatoreServer.getOutputStream().writeObject((g.getNomeGiocatore())
+                                    + ": punteggi raggiunti = " + punteggiGiocatore.get(g));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                giocatoreServer.getOutputStream().writeObject(Instruction.DONE);
+                giocatoreServer.getOutputStream().flush();
             } catch (IOException e) {
-                //Se un giocatore si scollega dal gioco
                 e.printStackTrace();
             }
         }
 
     }
-    //TODO: finisci send canva, c' bug
-    public void sendCanvasToAll() {
-
+    public void iniziaTimer() {
+        ScheduledExecutorService timeService = Executors.newSingleThreadScheduledExecutor();
+        timeService.scheduleAtFixedRate(() -> {
+            if ((int) tempoRimasto.toSeconds() == 0 || isTerminatoPartita()) {
+                System.out.println("Timer: Tempo scaduto o partita terminata");
+                isTerminated.set(true);
+                timeService.shutdown();
+            } else {
+                tempoRimasto = tempoRimasto.subtract(Duration.seconds(1));
+            }
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     public void iniziaPartita(){
         System.out.println("partita inizia");
-        started = true;
-        GiocatoreServer disegnatore = giocatori.get(0);
+        disegnatore = giocatori.get(0);
         disegnatore.setDisegnatore(true);
+        disegnatore.setNomeGiocatore("Disegnatore " + 0);
         String parolaDaIndovinare = paroleDaIndovinare[new Random().nextInt(paroleDaIndovinare.length)];
         disegnatore.setParolaDaDisegnare(parolaDaIndovinare);
         this.parolaDaIndovinare = disegnatore.getParolaDaDisegnare();
@@ -91,14 +153,16 @@ public class Partita implements Runnable{
             }
             disegnatore.setId(0);
             threads.add(new Thread(disegnatore));
-            threads.get(0).start();
+            //disegnatore non parte
+//            threads.get(0).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
         //TODO: continua
         for (int i = 1; i < giocatori.size(); i++) {
-            Giocatore giocatore = giocatori.get(i);
+            GiocatoreServer giocatore = giocatori.get(i);
             giocatore.setId(i);
+            giocatore.setNomeGiocatore("Indovinatore " + i);
             try {
                 synchronized (giocatore.getOutputStream()) {
                     giocatore.getOutputStream().writeObject(Ruolo.INDOVINATORE);
@@ -114,7 +178,7 @@ public class Partita implements Runnable{
     }
 
     public boolean isTerminatoPartita() {
-        return vincitori.size() == giocatori.size() - 1;
+        return vincitori.size() == giocatori.size() - 1 || isTerminated.get();
     }
 
 

@@ -1,6 +1,8 @@
-package com.huandoriti.paint.game;
+package com.huandoriti.paint.game.canvastransfer;
 
-public class Rect extends Forma{
+import com.huandoriti.paint.game.canvastransfer.Forma;
+
+public class Rect extends Forma {
     public Rect(double x, double y, double width, double height) {
         super(x, y, width, height);
     }

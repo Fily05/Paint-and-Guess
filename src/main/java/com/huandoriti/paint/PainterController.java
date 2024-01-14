@@ -1,6 +1,9 @@
 package com.huandoriti.paint;
 
 import com.huandoriti.paint.game.*;
+import com.huandoriti.paint.game.canvastransfer.Forma;
+import com.huandoriti.paint.game.canvastransfer.Oval;
+import com.huandoriti.paint.game.canvastransfer.Rect;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,19 +15,21 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import javax.crypto.spec.DESedeKeySpec;
 import javax.imageio.ImageIO;
-import java.awt.image.TileObserver;
-import java.beans.beancontext.BeanContextServiceAvailableEvent;
+import javax.print.attribute.standard.Finishings;
 import java.io.*;
-import java.lang.reflect.Array;
+import java.net.SocketException;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 
 public class PainterController {
     private Giocatore giocatore;
@@ -56,8 +61,12 @@ public class PainterController {
     private TextFlow chat;
     @FXML
     private Button send;
-
-
+    @FXML
+    private Label orario;
+    private Timeline sendCanvasTimeline;
+    private ScheduledExecutorService receiveDataService;
+    private boolean isStopped;
+    private Duration tempoRimasto = Partita.MAX_TEMPO;
 
     public void initialize() {
         GraphicsContext g = canvas.getGraphicsContext2D();
@@ -85,30 +94,79 @@ public class PainterController {
             System.out.println("Send words");
             sendWords();
         });
-
+        chat.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                send.fire();
+            }
+        });
         chat.setLineSpacing(0.5);
         brushSize.setEditable(true);
         brushSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 48, 12, 2));
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> Platform.runLater(() -> sendCanvas())));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
 
-        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), e -> new Thread(new Task<>() {
+        sendCanvasTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> Platform.runLater(() -> sendCanvas())));
+        sendCanvasTimeline.setCycleCount(Animation.INDEFINITE);
+        sendCanvasTimeline.play();
+
+        receiveDataService = Executors.newSingleThreadScheduledExecutor();
+        receiveDataService.scheduleAtFixedRate(new Task<>() {
             @Override
             protected Object call() throws Exception {
-                receiveData();
-                return null;
+                while (true) {
+                    if (receiveDataService.isShutdown()) {
+                        return null;
+                    }
+                    if (isStopped) {
+                        return null;
+                    }
+                    receiveData();
+                }
             }
-        }).start()));
-        timeline2.setCycleCount(Animation.INDEFINITE);
-        timeline2.play();
+        }, 1, Integer.MAX_VALUE, TimeUnit.SECONDS);
+
+
+        ScheduledExecutorService timeService = Executors.newSingleThreadScheduledExecutor();
+        timeService.scheduleAtFixedRate(() -> {
+            Platform.runLater(() -> {
+                if ((int) tempoRimasto.toSeconds() == 0 || isStopped) {
+                    //TODO: finisce tempo del gioco o termina gioco
+                    stopGame();
+                    try {
+                        synchronized (giocatore.getOutputStream()) {
+                            giocatore.getOutputStream().writeObject(Instruction.FINISH);
+                            giocatore.getOutputStream().flush();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    timeService.shutdown();
+                } else {
+                    tempoRimasto = tempoRimasto.subtract(Duration.seconds(1));
+                    orario.setText(LocalTime.MIN.plusSeconds((int) tempoRimasto.toSeconds()).toString());
+                }
+            });
+        }, 1, 1, TimeUnit.SECONDS);
+
+
+
     }
 
+    public void stopGame() {
+        chatArea.setDisable(true);
+        send.setDisable(true);
+        clear.setDisable(true);
+        sendCanvasTimeline.stop();
+        receiveDataService.shutdown();
+        isStopped = true;
 
+    }
+
+    /**
+     * Inviare una parola allo server. e
+     */
     public void sendWords() {
         try {
             if (chatArea.getText() != null && !chatArea.getText().trim().isEmpty()) {
-                Text text = new Text(chatArea.getText() + "\n");
+                Text text = new Text("Tu: " + chatArea.getText() + "\n");
                 text.setFont(Font.loadFont("Comic Sans MS", 18));
                 chat.getChildren().add(text);
                 synchronized (giocatore.getOutputStream()) {
@@ -127,8 +185,18 @@ public class PainterController {
             try {
                 System.out.println("Aspetto che ricevo");
                 Object o;
+//                if (Thread.holdsLock(giocatore.getInputStream())) {
+//                    System.out.println("Qualcun'altro thread sta gia aspettatdo valori");
+//                    return;
+//                }
                 synchronized (giocatore.getInputStream()) {
-                    o = giocatore.getInputStream().readObject();
+                    try {
+                        o = giocatore.getInputStream().readObject();
+                    } catch (SocketException e) {
+                        System.out.println("Cannot receive data");
+                        return;
+                    }
+
                 }
                 System.out.println("ho ricevuto oggetto");
                 if (o instanceof ArrayList) {
@@ -140,9 +208,25 @@ public class PainterController {
                         text.setFont(Font.loadFont("Comic Sans MS", 18));
                         chat.getChildren().add(text);
                     });
+                } else if (o instanceof Instruction instruction) {
+                    if (instruction.ordinal() == Instruction.FINISH.ordinal()) {
+                        String punteggio = "";
+                        synchronized (giocatore.getInputStream()) {
+                            do {
+                                punteggio = (String) giocatore.getInputStream().readObject();
+                                String finalPunteggio = punteggio;
+                                Platform.runLater(() -> {
+                                    Text text = new Text(finalPunteggio + "\n");
+                                    text.setFont(Font.loadFont("Comic Sans MS", 18));
+                                    chat.getChildren().add(text);
+                                });
+                            } while (instruction != Instruction.DONE);
+                            stopGame();
+                            giocatore.getSocket().close();
+                        }
 
+                    }
                 }
-
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -168,13 +252,16 @@ public class PainterController {
     public void sendCanvas() {
         if (giocatore != null && giocatore.isDisegnatore()) {
             try {
-                System.out.println("Send canvas");
-                System.out.println(forme.toString());
-                synchronized (giocatore.getOutputStream()) {
-                    giocatore.getOutputStream().writeObject(forme);
-                    giocatore.getOutputStream().flush();
+                if (!forme.isEmpty()) {
+                    System.out.println("Send canvas");
+                    System.out.println(forme.toString());
+                    synchronized (giocatore.getOutputStream()) {
+                        giocatore.getOutputStream().writeObject(forme);
+                        giocatore.getOutputStream().flush();
+                    }
+                    forme = new ArrayList<>();
                 }
-                forme = new ArrayList<>();
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -214,8 +301,18 @@ public class PainterController {
         }
     }
 
-    public void onExit() {
-        Platform.exit();
+    public void onExit(WindowEvent event) {
+        event.consume();
+        if (!isStopped) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Paint and Guess");
+            alert.setTitle("Impossibile chiudere il gioco");
+            alert.setContentText("La partita non è ancora terminata!!!");
+            alert.showAndWait();
+        } else {
+            Platform.exit();
+        }
+
     }
     public void onClear() {
         if (giocatore != null && giocatore.isDisegnatore()) {

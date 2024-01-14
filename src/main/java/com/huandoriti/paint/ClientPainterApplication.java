@@ -19,14 +19,16 @@ public class ClientPainterApplication extends Application {
     private Stage primaryStage;
     @Override
     public void start(Stage stage) throws IOException {
+        primaryStage = stage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("inizia.fxml"));
         Parent parent = loader.load();
         IniziaController iniziaController = loader.getController();
         iniziaController.setApplication(this);
+        primaryStage.setOnCloseRequest(windowEvent -> iniziaController.onExit(windowEvent));
         stage.setScene(new Scene(parent));
         stage.setTitle("Paint App");
         stage.show();
-        primaryStage = stage;
+
     }
 
     public void loadGame(String resourceURL, String title, Giocatore giocatore) throws IOException {
@@ -41,11 +43,20 @@ public class ClientPainterApplication extends Application {
 //        primaryStage.hide();
         primaryStage.setScene(new Scene(parent));
         primaryStage.setTitle(title);
+        primaryStage.setOnCloseRequest(windowEvent -> painterController.onExit(windowEvent));
 //        primaryStage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 
     public Giocatore getGiocatore() {

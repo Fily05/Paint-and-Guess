@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huandoriti.paint.PainterController">
@@ -48,20 +49,30 @@
          <right>
             <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="512.0" style="-fx-border-color: grey; -fx-border-width: 1px; -fx-border-style: solid;" BorderPane.alignment="CENTER">
                <children>
-                    <Canvas fx:id="canvas" height="380.0" width="512.0" />
-                  <Label fx:id="parolaDaDisegnare" layoutX="242.0" layoutY="14.0" />
+                    <Canvas fx:id="canvas" height="390.0" width="512.0" />
+                  <Label fx:id="parolaDaDisegnare" layoutX="242.0" layoutY="14.0" prefHeight="17.0" prefWidth="61.0" />
                </children>
             </Pane>
          </right>
+         <bottom>
+            <Label fx:id="orario" prefHeight="39.0" prefWidth="110.0" text="orario" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="Comic Sans MS" size="14.0" />
+               </font>
+            </Label>
+         </bottom>
       
       </BorderPane>
       <TextField fx:id="chatArea" layoutX="512.0" layoutY="481.0" prefHeight="26.0" prefWidth="178.0" />
       <Button fx:id="send" layoutX="688.0" layoutY="482.0" mnemonicParsing="false" text="send" />
-      <TextFlow fx:id="chat" layoutX="512.0" layoutY="44.0" prefHeight="438.0" prefWidth="225.0" />
-      <Label fx:id="nomeGiocatore" layoutX="512.0" layoutY="5.0" prefHeight="26.0" prefWidth="225.0" text="Label">
+      <TextFlow fx:id="chat" layoutX="512.0" layoutY="44.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="438.0" prefWidth="225.0" />
+      <Label fx:id="nomeGiocatore" layoutX="512.0" layoutY="5.0" prefHeight="26.0" prefWidth="225.0" text="Nome giocatore">
          <padding>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </padding>
+         <font>
+            <Font name="Comic Sans MS" size="14.0" />
+         </font>
       </Label>
    </children>
 </Pane>

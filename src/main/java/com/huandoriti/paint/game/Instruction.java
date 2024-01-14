@@ -1,6 +1,9 @@
 package com.huandoriti.paint.game;
 
-public enum Instruction {
+import java.io.Serializable;
+import java.nio.ReadOnlyBufferException;
+
+public enum Instruction implements Serializable {
     MY_RUOLO(),
     YOUR_RUOLO(),
     MY_ID(),
@@ -10,6 +13,13 @@ public enum Instruction {
      */
     WORD(),
     NUMBER(),
-    DISEGNATORE_SCONNECTED();
-
+    DISEGNATORE_SCONNECTED(),
+    /**
+     * Partita quando è finita, tempo terminato o tutti hanno indovinato
+     */
+    FINISH(),
+    /**
+     * FINE termina comunicazione socket
+     */
+    DONE,
 }
