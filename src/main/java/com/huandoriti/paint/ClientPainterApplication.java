@@ -25,6 +25,7 @@ public class ClientPainterApplication extends Application {
         IniziaController iniziaController = loader.getController();
         iniziaController.setApplication(this);
         primaryStage.setOnCloseRequest(windowEvent -> iniziaController.onExit(windowEvent));
+        primaryStage.setResizable(false);
         stage.setScene(new Scene(parent));
         stage.setTitle("Paint App");
         stage.show();

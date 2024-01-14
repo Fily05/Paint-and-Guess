@@ -31,7 +31,7 @@ public class ChatService {
                 try {
                     synchronized (giocatoreServer.getOutputStream()) {
                         if (haIndovinato) {
-                            giocatoreServer.getOutputStream().writeObject(indovinatore.getNomeGiocatore() + ": ***** " + "(ha vinto)");
+                            giocatoreServer.getOutputStream().writeObject(indovinatore.getNomeGiocatore() + ": ***** " + "(ha indovinato)");
                             giocatoreServer.getOutputStream().flush();
                         } else {
                             giocatoreServer.getOutputStream().writeObject(indovinatore.getNomeGiocatore() + ": " + text);

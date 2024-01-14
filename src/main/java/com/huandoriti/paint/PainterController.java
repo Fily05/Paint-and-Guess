@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -34,7 +35,8 @@ import java.util.concurrent.*;
 public class PainterController {
     private Giocatore giocatore;
     private ClientPainterApplication application;
-
+    @FXML
+    private Pane panePrincipale;
     @FXML
     private Label parolaDaDisegnare;
 
@@ -65,6 +67,7 @@ public class PainterController {
     private Label orario;
     private Timeline sendCanvasTimeline;
     private ScheduledExecutorService receiveDataService;
+    private ScheduledExecutorService timeService;
     private boolean isStopped;
     private Duration tempoRimasto = Partita.MAX_TEMPO;
 
@@ -100,8 +103,8 @@ public class PainterController {
             }
         });
         chat.setLineSpacing(0.5);
-        brushSize.setEditable(true);
-        brushSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 48, 12, 2));
+
+        brushSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 35, 12, 4));
 
         sendCanvasTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> Platform.runLater(() -> sendCanvas())));
         sendCanvasTimeline.setCycleCount(Animation.INDEFINITE);
@@ -124,20 +127,12 @@ public class PainterController {
         }, 1, Integer.MAX_VALUE, TimeUnit.SECONDS);
 
 
-        ScheduledExecutorService timeService = Executors.newSingleThreadScheduledExecutor();
+        timeService = Executors.newSingleThreadScheduledExecutor();
         timeService.scheduleAtFixedRate(() -> {
             Platform.runLater(() -> {
                 if ((int) tempoRimasto.toSeconds() == 0 || isStopped) {
                     //TODO: finisce tempo del gioco o termina gioco
                     stopGame();
-                    try {
-                        synchronized (giocatore.getOutputStream()) {
-                            giocatore.getOutputStream().writeObject(Instruction.FINISH);
-                            giocatore.getOutputStream().flush();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     timeService.shutdown();
                 } else {
                     tempoRimasto = tempoRimasto.subtract(Duration.seconds(1));
@@ -155,7 +150,8 @@ public class PainterController {
         send.setDisable(true);
         clear.setDisable(true);
         sendCanvasTimeline.stop();
-        receiveDataService.shutdown();
+//        receiveDataService.shutdown();
+        timeService.shutdown();
         isStopped = true;
 
     }
@@ -182,53 +178,60 @@ public class PainterController {
 
     public void receiveData() {
         if (giocatore != null) {
-            try {
-                System.out.println("Aspetto che ricevo");
-                Object o;
-//                if (Thread.holdsLock(giocatore.getInputStream())) {
-//                    System.out.println("Qualcun'altro thread sta gia aspettatdo valori");
-//                    return;
-//                }
-                synchronized (giocatore.getInputStream()) {
-                    try {
-                        o = giocatore.getInputStream().readObject();
-                    } catch (SocketException e) {
-                        System.out.println("Cannot receive data");
-                        return;
-                    }
-
+            System.out.println("Aspetto che ricevo");
+            Object o;
+            synchronized (giocatore.getInputStream()) {
+                try {
+                    o = giocatore.getInputStream().readObject();
+                } catch (IOException | ClassNotFoundException exception) {
+                    exception.printStackTrace();
+                    return;
                 }
-                System.out.println("ho ricevuto oggetto");
-                if (o instanceof ArrayList) {
-                    receiveCanvas((ArrayList<Forma>) o);
-                } else if (o instanceof String s) {
-                    Platform.runLater(() -> {
-                        System.out.println("Ho ricevuto stringa " + s);
-                        Text text = new Text(s + "\n");
-                        text.setFont(Font.loadFont("Comic Sans MS", 18));
-                        chat.getChildren().add(text);
-                    });
-                } else if (o instanceof Instruction instruction) {
-                    if (instruction.ordinal() == Instruction.FINISH.ordinal()) {
-                        String punteggio = "";
-                        synchronized (giocatore.getInputStream()) {
-                            do {
-                                punteggio = (String) giocatore.getInputStream().readObject();
-                                String finalPunteggio = punteggio;
-                                Platform.runLater(() -> {
-                                    Text text = new Text(finalPunteggio + "\n");
-                                    text.setFont(Font.loadFont("Comic Sans MS", 18));
-                                    chat.getChildren().add(text);
-                                });
-                            } while (instruction != Instruction.DONE);
-                            stopGame();
-                            giocatore.getSocket().close();
+            }
+            System.out.println("ho ricevuto oggetto");
+            if (o instanceof ArrayList) {
+                receiveCanvas((ArrayList<Forma>) o);
+                return;
+            }
+            if (o instanceof String s) {
+                Platform.runLater(() -> {
+                    System.out.println("Ho ricevuto stringa " + s);
+                    Text text = new Text(s + "\n");
+                    text.setFont(Font.loadFont("Comic Sans MS", 18));
+                    chat.getChildren().add(text);
+                });
+                return;
+            }
+            if (o instanceof Instruction instruction && instruction == Instruction.FINISH) {
+                do {
+                    Object oggetto;
+                    synchronized (giocatore.getInputStream()) {
+                        try {
+                            oggetto = giocatore.getInputStream().readObject();
+                        } catch (IOException | ClassNotFoundException exception) {
+                            exception.printStackTrace();
+                            continue;
                         }
-
                     }
+                    if (oggetto instanceof String s) {
+                        System.out.println(s);
+                        Platform.runLater(() -> {
+                            Text text = new Text(s + "\n");
+                            text.setFont(Font.loadFont("Comic Sans MS", 18));
+                            chat.getChildren().add(text);
+                        });
+                    } else if (oggetto instanceof Instruction) {
+                        instruction = (Instruction) oggetto;
+                    }
+                } while (instruction != Instruction.DONE);
+                stopGame();
+                receiveDataService.shutdown();
+                try {
+                    System.out.println("chiudo socket");
+                    giocatore.getSocket().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -292,14 +295,6 @@ public class PainterController {
         }
     }
 
-    public void onSave() {
-        try {
-            Image snapshot = canvas.snapshot(null, null);
-            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", new File("paint.png"));
-        } catch (Exception e) {
-            System.out.println("Failed to save image: " + e);
-        }
-    }
 
     public void onExit(WindowEvent event) {
         event.consume();

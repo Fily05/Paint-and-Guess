@@ -28,6 +28,7 @@ public class GiocatoreServer extends Giocatore{
                 o = this.getInputStream().readObject();
                 if (o instanceof String s) {
                     boolean hoIndovinato = this.getPartita().getChatService().receiveText(this, s);
+                    System.out.println("Giocatore server " + nomeGiocatore + "ha indovinato termina");
                     if (hoIndovinato) return;
                 } else {
                     System.out.println("Da indovinatore ho ricevuto qualcosa di storto");

@@ -7,6 +7,7 @@ import java.net.SocketImpl;
 
 public class Server {
     private ServerSocket serverSocket;
+    public static int GIOCATORI_NUM = 3;
 
     public Server() throws IOException {
         serverSocket = new ServerSocket(5544);
@@ -21,7 +22,7 @@ public class Server {
             int count = 0;
             Partita partita = new Partita();
             try {
-                while (count < 3) {
+                while (count < GIOCATORI_NUM) {
                     Socket socket = serverSocket.accept();
                     System.out.println("Server accetta");
                     System.out.println(socket);
@@ -30,7 +31,7 @@ public class Server {
                     count++;
                 }
                 System.out.println("partita run");
-                partita.run();
+                new Thread(partita).start();
             } catch (IOException e) {
                 e.printStackTrace();
             }

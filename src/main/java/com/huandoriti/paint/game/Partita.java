@@ -4,15 +4,15 @@ import com.huandoriti.paint.game.canvastransfer.Forma;
 import javafx.application.Platform;
 import javafx.util.Duration;
 
+import java.awt.image.SinglePixelPackedSampleModel;
 import java.io.IOException;
+import java.security.UnrecoverableEntryException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 
@@ -43,33 +43,37 @@ public class Partita implements Runnable{
         chatService = new ChatService(giocatori, this);
         while (true) {
             Object object;
-            System.out.println("Sincronizzio input stream disegnatore");
-            synchronized (giocatori.get(0).getInputStream()) {
-                if (isTerminatoPartita()) {
-                    System.out.println("Partita terminata");
-                    terminaPartita();
-                    return;
-                }
-                System.out.println("leggo canvas");
-                try {
-                    object = giocatori.get(0).getInputStream().readObject();
-                    System.out.println("Ho letto oggetto");
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                    continue;
-                }
+            FutureTask futureTask = new FutureTask(() -> {
+                    synchronized (giocatori.get(0).getInputStream()) {
+                        System.out.println("leggo canvas");
+                        try {
+                            Object obj;
+                            obj = giocatori.get(0).getInputStream().readObject();
+                            System.out.println("Ho letto oggetto");
+                            return obj;
+                        } catch (IOException | ClassNotFoundException e) {
+                            System.out.println("Socket stato chiuso");
+                        }
+                    }
+                    return null;
+            });
+            Thread readCanvas = new Thread(futureTask);
+            readCanvas.start();
+
+            if (isTerminatoPartita()) {
+                readCanvas.interrupt();
+                terminaPartita();
+                System.out.println("Partita terminata");
+                return;
             }
-            if (object instanceof Instruction instruction) {
-                if (instruction.ordinal() == Instruction.FINISH.ordinal()) {
-                    System.out.println("Disegnatore segnala tempo finito");
-                    while (!isTerminatoPartita()) {}
-                    System.out.println("Partita terminata");
-                    terminaPartita();
-                    return;
-                }
+
+            try {
+                object = futureTask.get(3000, TimeUnit.MILLISECONDS);
+                System.out.println("future task get");
+            } catch (Exception e) {
+                continue;
             }
             sendCanvasToAll(object);
-
         }
     }
     //TODO: finisci send canva, c' bug

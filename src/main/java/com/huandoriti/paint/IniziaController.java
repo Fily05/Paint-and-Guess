@@ -43,7 +43,7 @@ public class IniziaController {
                     System.out.println("ciaooo");
                     giocatore = new Giocatore(new Socket("localhost", 5544));
                     isConnected = true;
-                    Platform.runLater(() -> message.setText("In attesa degli altri giocatori... "));
+                    Platform.runLater(() -> message.setText("In attesa degli altri giocatori... (in tutto 3 giocatori)"));
                     synchronized (giocatore.getInputStream()) {
                         if (giocatore.getInputStream().readObject() instanceof Ruolo ruolo) {
                             if (ruolo.ordinal() == Ruolo.DISEGNATORE.ordinal()) {
