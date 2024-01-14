@@ -24,7 +24,7 @@ public class Partita implements Runnable{
     private GiocatoreServer disegnatore;
     private String parolaDaIndovinare;
     private ChatService chatService;
-    public static final Duration MAX_TEMPO = Duration.minutes(1);
+    public static final Duration MAX_TEMPO = Duration.minutes(3);
     /**
      * Partita è terminato quando il tempo è scaduto, o tutti hanno indovinato
      */

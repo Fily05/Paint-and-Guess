@@ -4,23 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="318e3a5c-30be-4e49-a6ec-fb72994349fa" name="Changes" comment="Versione funzionante. Con il gioco che termina al fine del timer. Da vedere ancora che se tutti hanno indovinato gioco termina">
+    <list default="true" id="318e3a5c-30be-4e49-a6ec-fb72994349fa" name="Changes" comment="Versione funzionante tutto.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/ClientPainterApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/ClientPainterApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/IniziaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/IniziaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/PainterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/PainterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/ChatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/ChatService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/GiocatoreServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/GiocatoreServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/huandoriti/paint/home.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/huandoriti/paint/home.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/ClientPainterApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/ClientPainterApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/IniziaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/IniziaController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/PainterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/PainterController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Partita.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Partita.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/home.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/home.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +73,7 @@
       <recent name="com.huandoriti.paint.game.canvastransfer" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ClientPainterApplication2">
+  <component name="RunManager" selected="Application.ClientPainterApplication3">
     <configuration name="ClientPainterApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.ClientPainterApplication" />
       <module name="Paint" />
@@ -240,7 +229,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705251721422</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Versione funzionante tutto.">
+      <option name="closed" value="true" />
+      <created>1705266870269</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1705266870269</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -262,7 +259,8 @@
     <MESSAGE value="Questa è la versione funzionante con la trasmissione del canvas. Integrato la chat. Nella quale si puo inviare ma non c'è bug nella visualizzazione della parola da indovinare che deve essere sostituita da asterischi. Da gestiche ancora termine del gioco e il punteggio" />
     <MESSAGE value="eliminato il bug in cui la parola indovinata puo essere vista ( cioè senza asterischi)" />
     <MESSAGE value="Versione funzionante. Con il gioco che termina al fine del timer. Da vedere ancora che se tutti hanno indovinato gioco termina" />
-    <option name="LAST_COMMIT_MESSAGE" value="Versione funzionante. Con il gioco che termina al fine del timer. Da vedere ancora che se tutti hanno indovinato gioco termina" />
+    <MESSAGE value="Versione funzionante tutto." />
+    <option name="LAST_COMMIT_MESSAGE" value="Versione funzionante tutto." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
