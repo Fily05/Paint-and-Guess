@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ClientPainterApplication2" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.ClientPainterApplication" />
+    <module name="Paint" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="318e3a5c-30be-4e49-a6ec-fb72994349fa" name="Changes" comment="Versione funzionante tutto.">
+    <list default="true" id="318e3a5c-30be-4e49-a6ec-fb72994349fa" name="Changes" comment="Versione funzionante tutto. Cambiato durata della partita">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/huandoriti/paint/game/Partita.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/PainterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/PainterController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Partita.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Partita.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/huandoriti/paint/game/Server.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,47 +69,7 @@
       <recent name="com.huandoriti.paint.game.canvastransfer" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ClientPainterApplication3">
-    <configuration name="ClientPainterApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.ClientPainterApplication" />
-      <module name="Paint" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.huandoriti.paint.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ClientPainterApplication2" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.ClientPainterApplication" />
-      <module name="Paint" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ClientPainterApplication3" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.ClientPainterApplication" />
-      <module name="Paint" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.huandoriti.paint.game.Server" />
-      <module name="Paint" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.huandoriti.paint.game.canvastransfer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.Server">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="Paint-and-Guess" />
       <method v="2">
@@ -237,7 +193,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705266870269</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Versione funzionante tutto. Cambiato durata della partita">
+      <option name="closed" value="true" />
+      <created>1705267375404</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1705267375404</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -260,7 +224,8 @@
     <MESSAGE value="eliminato il bug in cui la parola indovinata puo essere vista ( cioè senza asterischi)" />
     <MESSAGE value="Versione funzionante. Con il gioco che termina al fine del timer. Da vedere ancora che se tutti hanno indovinato gioco termina" />
     <MESSAGE value="Versione funzionante tutto." />
-    <option name="LAST_COMMIT_MESSAGE" value="Versione funzionante tutto." />
+    <MESSAGE value="Versione funzionante tutto. Cambiato durata della partita" />
+    <option name="LAST_COMMIT_MESSAGE" value="Versione funzionante tutto. Cambiato durata della partita" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
